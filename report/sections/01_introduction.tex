@@ -1,0 +1,19 @@
+\section{Introduction}
+
+Data centres use a large and growing share of the world's electricity, and most of this energy is drawn by the servers themselves. Knowing how much power a server draws under a given workload helps operators plan power provisioning, place virtual machines on hosts, and spot hardware that behaves abnormally \citep{fan2007}. Power can be measured directly with hardware meters, but these are expensive and hard to deploy on every machine. A cheaper option is to predict power from software telemetry, such as CPU, memory, disk and network load, which every operating system already reports. This only works if the mathematical link between the load signals and the power draw is known. Real servers are also not \emph{energy proportional}: they use a large share of their peak power even when idle, and power grows non-linearly with load \citep{barroso2007}. A simple straight-line model is therefore unlikely to be enough.
+
+The coursework provides simulated telemetry for one server in three files:
+\begin{itemize}
+  \item \texttt{X.csv}: four input signals, $x_1$ (CPU utilisation), $x_2$ (memory usage), $x_3$ (disk I/O) and $x_4$ (network traffic);
+  \item \texttt{y.csv}: the output signal $y$, the total power consumption;
+  \item \texttt{time.csv}: the sampling time of each row, in seconds.
+\end{itemize}
+All five signals contain additive, independent, zero-mean Gaussian noise of unknown variance.
+
+The aim is to find which of five given polynomial models ``truly'' describes the relationship between the inputs and $y$. The report follows the three coursework tasks:
+\begin{enumerate}
+  \item \textbf{Task 1} -- exploratory analysis of the signals: time series, distributions, correlations and scatter plots (Section~\ref{sec:task1}).
+  \item \textbf{Task 2} -- least squares fitting of the five candidate models, model comparison with RSS, log-likelihood, AIC, BIC and residual analysis, and validation of the chosen model on a train/test split (Section~\ref{sec:task2}).
+  \item \textbf{Task 3} -- rejection Approximate Bayesian Computation (ABC) to estimate the posterior distribution of the two largest parameters of the chosen model (Section~\ref{sec:task3}).
+\end{enumerate}
+Section~\ref{sec:discussion} discusses the results and their limits, and Section~\ref{sec:conclusion} concludes. All analysis was done in R version 4.6.1 \citep{rcore2026} using only base R functions. The full annotated code is in Appendix~\ref{app:code}, and the code that produced each result is referenced in the text.

@@ -1,0 +1,46 @@
+\section{Data and Methodology}
+\label{sec:method}
+
+\subsection{Data preparation}
+The three CSV files were read into R and joined column by column into one data frame with the columns \texttt{time}, \texttt{x1}, \texttt{x2}, \texttt{x3}, \texttt{x4} and \texttt{y} (Appendix~\ref{app:task1}). There are $n=10{,}000$ rows, sampled every 0.1\,s from 0 to 999.9\,s. No value was missing, so no rows were removed or imputed.
+
+\subsection{Candidate models}
+The five candidate models given in the brief are:
+\begin{align*}
+\text{Model 1:}\quad & y=\theta_1x_4+\theta_2x_1^2+\theta_3x_1^3+\theta_4x_2^4+\theta_5x_1^4+\theta_{bias}+\varepsilon\\
+\text{Model 2:}\quad & y=\theta_1x_4+\theta_2x_1^3+\theta_3x_3^4+\theta_{bias}+\varepsilon\\
+\text{Model 3:}\quad & y=\theta_1x_3^3+\theta_2x_3^4+\theta_{bias}+\varepsilon\\
+\text{Model 4:}\quad & y=\theta_1x_2+\theta_2x_1^3+\theta_4x_3^4+\theta_{bias}+\varepsilon\\
+\text{Model 5:}\quad & y=\theta_1x_4+\theta_2x_1^2+\theta_3x_1^3+\theta_4x_3^4+\theta_{bias}+\varepsilon
+\end{align*}
+The brief numbers the parameters of Model~4 as $\theta_1,\theta_2,\theta_4$ with no $\theta_3$. This looks like a typing error, so Model~4 is treated as having three regressors plus a bias, that is $k=4$ parameters.
+
+Each model is non-linear in the inputs but \emph{linear in the parameters}. Each can therefore be written as $\mathbf{y}=\mathbf{X}\boldsymbol{\theta}+\boldsymbol{\varepsilon}$, where each column of the design matrix $\mathbf{X}$ is one transformed input (for example $x_1^3$) and the last column is all ones for the bias.
+
+\subsection{Statistical methods}
+\textbf{Least squares.} The parameters are estimated by ordinary least squares,
+\begin{equation}
+\hat{\boldsymbol{\theta}}=(\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y},
+\label{eq:ls}
+\end{equation}
+which is also the maximum likelihood estimate when the noise is i.i.d.\ Gaussian \citep{montgomery2012}.
+
+\textbf{Goodness of fit.} The residual sum of squares is $\text{RSS}=\sum_{i=1}^{n}(y_i-\mathbf{x}_i\hat{\boldsymbol{\theta}})^2$. With the noise variance estimated as $\hat\sigma^2=\text{RSS}/(n-1)$, as the brief specifies, the Gaussian log-likelihood is
+\begin{equation}
+\ln p(D\mid\hat{\boldsymbol{\theta}})=-\frac{n}{2}\ln(2\pi)-\frac{n}{2}\ln(\hat\sigma^2)-\frac{1}{2\hat\sigma^2}\text{RSS}.
+\label{eq:loglik}
+\end{equation}
+
+\textbf{Information criteria.} Adding parameters always lowers the RSS, so models of different sizes are compared with
+\begin{equation}
+\text{AIC}=2k-2\ln p(D\mid\hat{\boldsymbol{\theta}}),\qquad
+\text{BIC}=k\ln(n)-2\ln p(D\mid\hat{\boldsymbol{\theta}}),
+\label{eq:aicbic}
+\end{equation}
+where $k$ is the number of estimated parameters \citep{akaike1974,schwarz1978}. Lower values are better. BIC penalises each extra parameter by $\ln(10000)\approx9.2$ instead of 2, so it favours smaller models more strongly than AIC.
+
+\textbf{Residual checks.} If a model has the right structure, its residuals should look like the Gaussian noise in the data. This was checked with histograms, normal Q-Q plots and the Shapiro--Wilk test \citep{shapiro1965}.
+
+\textbf{Validation and intervals.} The chosen model was refitted on a random 70\% of the data and tested on the other 30\%. For a test input $\mathbf{x}_*$, the 95\% confidence interval of the mean prediction is $\hat y_*\pm t_{0.975,\,n_{tr}-k}\sqrt{\mathbf{x}_*^T\hat{\boldsymbol\Sigma}_\theta\mathbf{x}_*}$, with $\hat{\boldsymbol\Sigma}_\theta=\hat\sigma^2(\mathbf{X}^T\mathbf{X})^{-1}$. The 95\% prediction interval for a new observation adds the noise variance $\hat\sigma^2$ inside the square root \citep{james2013}.
+
+\textbf{Rejection ABC.} Parameter values are drawn from a prior. Each draw is used to generate model output, and a draw is kept only if that output is close enough to the observed data. The kept draws approximate the posterior distribution \citep{pritchard1999,beaumont2002,sunnaker2013}. Section~\ref{sec:task3} gives the details.

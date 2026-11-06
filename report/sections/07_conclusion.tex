@@ -1,0 +1,10 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+This report modelled simulated cloud server power consumption from four telemetry inputs using polynomial regression. The exploratory analysis showed stationary, independent samples. Disk I/O was strongly and non-linearly linked to power, CPU weakly, and memory and network showed no visible link. A linear model explained only 76\% of the variance and left clearly non-Gaussian residuals.
+
+Of the five candidate models, \textbf{Model~2}, $y=4.48\,x_4+1.20\,x_1^3+0.80\,x_3^4+120.0$, was selected. It had the lowest AIC (60607.9) and BIC (60636.7), and its residuals were the only ones, together with those of the over-parameterised Model~5, that were consistent with Gaussian noise of standard deviation about 5\,W. When trained on 70\% of the data, it predicted the remaining 30\% with an RMSE of 5.04\,W and $R^2=0.99996$, and its 95\% prediction intervals covered 94.6\% of the test values.
+
+Rejection ABC on the two largest parameters gave posterior means of 120.02 for the intercept and 4.480 for the network coefficient, with narrow 95\% credible intervals and a negative correlation of $-0.71$ between them. These results confirm the least squares estimates and add information about how the two parameters depend on each other.
+
+In practice, a model of this kind could estimate server power from software telemetry alone, without hardware meters, and help with energy-aware scheduling. Future work could use errors-in-variables regression to handle noise in the inputs, ABC on all four parameters with a smaller tolerance, and testing on real server measurements.

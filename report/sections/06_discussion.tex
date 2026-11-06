@@ -1,0 +1,28 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\textbf{What the model says about the server.} The selected model (Equation~\ref{eq:best}) splits power into four parts:
+\begin{itemize}
+  \item a fixed idle power of about 120\,W, drawn even when the load is zero, which matches the observation that servers are not energy proportional \citep{barroso2007};
+  \item a cubic CPU term ($1.2\,x_1^3$), which fits the common view that dynamic CPU power rises faster than linearly as clock speed and voltage increase together;
+  \item a fourth-power disk I/O term ($0.8\,x_3^4$), which is by far the largest source of variation and causes the rare, very high power peaks;
+  \item a small linear network term ($4.48\,x_4$).
+\end{itemize}
+Memory usage ($x_2$) does not appear in the selected model. Model~4, which uses $x_2$ in place of $x_4$, was much worse ($\Delta\text{BIC}>21{,}000$), and $x_2$ was not significant in the baseline linear model. Because the data are simulated, these terms describe how the data were generated and should not be read as a physical law. The pattern is still realistic: storage-heavy and compute-heavy workloads drive power far more than memory use does.
+
+\textbf{Agreement between methods.} Several independent pieces of evidence point to Model~2: the large drop in RSS, the lowest AIC and BIC, Gaussian residuals, a test RMSE equal to the noise level, a 95\% prediction interval with 94.6\% coverage, and ABC posteriors centred on the least squares values. Each check tests a different property, such as in-sample fit, model complexity, error structure, out-of-sample accuracy, interval calibration and parameter uncertainty. Their agreement gives strong confidence in the choice.
+
+\textbf{Exploratory analysis can mislead.} Task~1 alone would have suggested that network traffic does not matter, since $r=0.010$. Yet the regression shows a clear effect with a very small standard error (0.017), and leaving out $x_4$ (as Model~4 does) raises the RSS by a factor of eight. A small effect can be hidden in pairwise plots by the much larger variation from another input. Variables should therefore not be dropped on the basis of correlations alone.
+
+\textbf{Choosing between nested models.} Model~5 contains Model~2, so its RSS is always at least as low. Choosing a model by RSS or $R^2$ alone would pick the larger model every time. AIC and BIC penalise the extra parameter. In this case $\Delta\text{AIC}=1.67$ is borderline, while $\Delta\text{BIC}=8.9$ is decisive. With large samples BIC is consistent: it tends to pick the true model when that model is among the candidates \citep{schwarz1978,burnham2002}. This matches what we see here.
+
+\textbf{Limitations.}
+\begin{itemize}
+  \item The brief states that the \emph{inputs} also contain noise. Least squares assumes the inputs are measured exactly. Noise in the inputs biases the estimates towards zero, and the bias grows when inputs are raised to high powers. The coefficients here are so close to round numbers that the input noise seems to be small, but in real telemetry this could matter.
+  \item The variance in Task~2.3 uses $n-1$, as the brief requires, rather than the unbiased $n-k$. With $n=10{,}000$ the difference is negligible and does not change the ranking.
+  \item The Shapiro--Wilk test was run on a random sample of 5000 residuals. With very large samples, formal tests can reject normality for tiny departures, so the Q-Q plots are the main evidence.
+  \item The ABC distance is computed from the deterministic model output, without simulated noise, and with a fixed RSS tolerance. As explained in Section~\ref{sec:task3}, this shapes the posterior. Only two of the four parameters were treated as uncertain, so the posterior is conditional on the other two being fixed, and it understates the full uncertainty.
+  \item Only the five given models were compared. A model outside this set, for example one with interaction terms, could not be found by this procedure.
+\end{itemize}
+
+\textbf{Reflection.} Writing the least squares solution by hand instead of only calling \texttt{lm()} made each step clear, and checking against \texttt{lm()} gave confidence that the code was correct. The most useful lesson was to look at residual plots and test-set behaviour as well as the numbers. For example, the 3.7\% coverage of the confidence interval looked like an error at first, but it is the correct result once the confidence interval is separated from the prediction interval.
