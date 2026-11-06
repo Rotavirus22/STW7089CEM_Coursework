@@ -42,17 +42,19 @@ AIC and BIC were computed from Equation~\eqref{eq:aicbic} with $k$ equal to the 
 
 \begin{table}[H]
 \centering
-\caption{Model comparison criteria ($n=10{,}000$). The best values are in bold.}
+\caption{Model comparison criteria ($n=10{,}000$). The lowest AIC and BIC (selected model) are in bold.}
 \label{tab:crit}
-\begin{tabular}{crrrrrrr}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{crrrrrrrr}
 \toprule
-Model & $k$ & RSS & $\hat\sigma^2$ & $\ln p(D|\hat\theta)$ & AIC & BIC & $\Delta$BIC \\
+Model & $k$ & RSS & $\hat\sigma^2$ & $\ln p(D|\hat\theta)$ & AIC & BIC & $\Delta$AIC & $\Delta$BIC \\
 \midrule
-1 & 6 & $7.538\times10^{9}$ & 753871.8 & $-81853.8$ & 163719.6 & 163762.8 & 103126.1 \\
-2 & 4 & $\mathbf{2.508\times10^{5}}$ & 25.08 & $\mathbf{-30300.0}$ & \textbf{60607.9} & \textbf{60636.7} & \textbf{0.0} \\
-3 & 3 & $3.048\times10^{8}$ & 30478.8 & $-65812.8$ & 131631.7 & 131653.3 & 71016.5 \\
-4 & 4 & $2.056\times10^{6}$ & 205.65 & $-40819.7$ & 81647.5 & 81676.3 & 21039.6 \\
-5 & 5 & $2.508\times10^{5}$ & 25.08 & $-30299.8$ & 60609.6 & 60645.6 & 8.9 \\
+1 & 6 & $7.538\times10^{9}$ & 753871.8 & $-81853.8$ & 163719.6 & 163762.8 & 103111.7 & 103126.1 \\
+2 & 4 & $2.508\times10^{5}$ & 25.08 & $-30300.0$ & \textbf{60607.9} & \textbf{60636.7} & \textbf{0.0} & \textbf{0.0} \\
+3 & 3 & $3.048\times10^{8}$ & 30478.8 & $-65812.8$ & 131631.7 & 131653.3 & 71023.8 & 71016.5 \\
+4 & 4 & $2.056\times10^{6}$ & 205.65 & $-40819.7$ & 81647.5 & 81676.3 & 21039.6 & 21039.6 \\
+5 & 5 & $2.508\times10^{5}$ & 25.08 & $-30299.8$ & 60609.6 & 60645.6 & 1.7 & 8.9 \\
 \bottomrule
 \end{tabular}
 \end{table}
