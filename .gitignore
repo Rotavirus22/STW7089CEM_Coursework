@@ -1,3 +1,25 @@
+# R / RStudio
 .Rproj.user/
 .RData
 .Rhistory
+.Ruserdata
+
+# LaTeX build files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
